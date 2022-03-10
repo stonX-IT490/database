@@ -23,9 +23,8 @@ sudo apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
 curl -s https://install.zerotier.com | sudo bash
 
 # Run commands from mysql_secure_installation
-SECURE_MYSQL=$(expect -c "
-set timeout 10
-spawn mysql_secure_installation
+sudo expect -c "set timeout 10
+spawn sudo mysql_secure_installation
 expect \"Enter current password for root (enter for none):\"
 send \"\r\"
 expect \"Switch to unix_socket authentication\"
@@ -40,10 +39,7 @@ expect \"Remove test database and access to it?\"
 send \"y\r\"
 expect \"Reload privilege tables now?\"
 send \"y\r\"
-expect eof
-")
-
-echo "$SECURE_MYSQL"
+expect eof"
 
 # Import DB Schema
 sudo mysql < schema.sql
