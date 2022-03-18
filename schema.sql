@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
     `opened_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `first_name` TINYTEXT NOT NULL,
     `last_name` TINYTEXT NOT NULL,
+    `admin` BOOLEAN NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     UNIQUE (`email`)
 );
