@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `Trade` (
     `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `symbol` VARCHAR(6) NOT NULL,
     `commission_id` INT UNSIGNED,
-    `shares` INT UNSIGNED NOT NULL,
+    `shares` INT NOT NULL,
     `expected_shares` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES Users(`id`),
