@@ -803,6 +803,33 @@ function tradeShare($request) {
   return [ 'error' => false ];
 }
 
+function watchPush($request) {
+  $db = getDB();
+
+  $user = $request['user_id'];
+  $id = $request['id'];
+  $greaterOrLower = $request['greaterOrLower'];
+  $amount = $request['amount'];
+
+  if(!isset($user) || !isset($id) ||!isset($greaterOrLower) ||!isset($amount)) {
+    return [ 'error' => true, 'msg' => 'Error: RMQ Missing fields!' ];
+  }
+
+  $stmt = $db->prepare(
+    "UPDATE Watching SET push = 1, greater_or_lower = :got, watchValue = :value WHERE user_id = :user_id AND id = :id"
+  );
+  $r = $stmt->execute([
+    ":user_id" => $user,
+    ":id" => $id,
+    ":got" => $greaterOrLower,
+    ":value" => $amount
+  ]);
+  if( !$r ) {
+    return [ 'error' => true, 'msg' => 'SQL ERROR' ];
+  }
+  return [ 'error' => false ];
+}
+
 function requestHandler($request) {
   if ($request['type'] == 'login') {
     return doLogin($request);
@@ -851,6 +878,9 @@ function requestHandler($request) {
   }
   if ($request['type'] == 'tradeShare') {
     return tradeShare($request);
+  }
+  if ($request['type'] == 'watchPush') {
+    return watchPush($request);
   }
   return [ 'error' => true, 'msg' => 'Error: RMQ No Type' ];
 }
