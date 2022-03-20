@@ -57,26 +57,42 @@ sudo mysql -e "GRANT ALL ON stonx.* TO 'stonx'@'localhost';"
 sudo mysql -e "FLUSH PRIVILEGES;"
 
 # Setup rabbitmq listener
-mkdir rabbit
 cd rabbit
 git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-webHost
+git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-dmzHost
 cp ../config.webHost.php rabbitmq-webHost/config.php
+cp ../config.dmzHost.php rabbitmq-dmzHost/config.php
 cd ..
 
-pwd=`pwd`'/rabbit/webserver.php'
-service="[Unit]
+pwd=`pwd`'/rabbit'
+serviceWebHost="[Unit]
 Description=Webserver RabbitMQ Consumer Listener
 
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/bin/php -f $pwd
+ExecStart=/usr/bin/php -f $pwd/webserver.php
 
 [Install]
 WantedBy=multi-user.target"
 
-echo "$service" > rmq-websrv.service
+serviceDmzHost="[Unit]
+Description=DMZ RabbitMQ Consumer Listener
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/php -f $pwd/dmz.php
+
+[Install]
+WantedBy=multi-user.target"
+
+echo "$serviceWebHost" > rmq-websrv.service
+echo "$serviceDmzHost" > rmq-dmz.service
 
 sudo cp rmq-websrv.service /etc/systemd/system/
+sudo cp rmq-dmz.service /etc/systemd/system/
 sudo systemctl start rmq-websrv
+sudo systemctl start rmq-dmz
 sudo systemctl enable rmq-websrv
+sudo systemctl enable rmq-dmz

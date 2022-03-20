@@ -2,3 +2,4 @@ composer*
 vendor/
 rabbit/rabbitmq-webHost
 rmq-websrv.service
+rmq-dmz.service
