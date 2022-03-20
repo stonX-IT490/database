@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `Transactions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
-  `amount` decimal(10,2) unsigned NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
   `expected_balance` decimal(10,2) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
