@@ -1,3 +1,5 @@
 devsessions/**
 db/**
 rabbitmq-common/**
+composer*
+/vendor
