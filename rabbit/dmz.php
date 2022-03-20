@@ -25,9 +25,31 @@ function getAllStocks($request) {
   return $r->fetchAll(PDO::FETCH_COLUMN);
 }
 
+function insertStocks($request) {
+  $db = getDB();
+
+  if(!isset($request['data'])) {
+    return [ 'error' => true, 'msg' => 'No data given.' ];
+  }
+
+  $stmt = $db->prepare(
+    "INSERT INTO Stock_Data(symbol, created, value) VALUES(:symbol, :created, :value)"
+  );
+  foreach($request['data'] as $data) {
+    $r = $stmt->execute($data);
+    if (!$r) {
+      continue;
+    }
+  }
+  return [ 'error' => false ];
+}
+
 function requestHandler($request) {
   if ($request['type'] == 'getAllStocks') {
     return getAllStocks($request);
+  }
+  if ($request['type'] == 'insertStocks') {
+    return insertStocks($request);
   }
   return [ 'error' => true, 'msg' => 'Error: RMQ No Type' ];
 }
