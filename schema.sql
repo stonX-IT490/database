@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `Stock_Data` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `value` decimal(10,2) unsigned NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_index` (`symbol`,`created`),
   KEY `symbol` (`symbol`),
   CONSTRAINT `Stock_Data_ibfk_1` FOREIGN KEY (`symbol`) REFERENCES `Stocks` (`symbol`)
 );
