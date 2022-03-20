@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `Watching` (
   `push` tinyint(1) NOT NULL DEFAULT 0,
   `greater_or_lower` tinyint(1) DEFAULT NULL,
   `watchValue` decimal(10,2) unsigned DEFAULT NULL,
+  `sent` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_index` (`user_id`,`symbol`),
   KEY `symbol` (`symbol`),
