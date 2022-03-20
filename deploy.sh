@@ -55,3 +55,28 @@ sudo mysql < stocks.sql
 sudo mysql -e "CREATE USER 'stonx'@'localhost' IDENTIFIED BY 'stonx_passwd';"
 sudo mysql -e "GRANT ALL ON stonx.* TO 'stonx'@'localhost';"
 sudo mysql -e "FLUSH PRIVILEGES;"
+
+# Setup rabbitmq listener
+mkdir rabbit
+cd rabbit
+git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-webHost
+cp ../config.webHost.php rabbitmq-webHost/config.php
+cd ..
+
+pwd=`pwd`'/rabbit/webserver.php'
+service="[Unit]
+Description=Webserver RabbitMQ Consumer Listener
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/php -f $pwd
+
+[Install]
+WantedBy=multi-user.target"
+
+echo "$service" > rmq-websrv.service
+
+sudo cp rmq-websrv.service /etc/systemd/system/
+sudo systemctl start rmq-websrv
+sudo systemctl enable rmq-websrv

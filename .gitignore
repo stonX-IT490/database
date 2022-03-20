@@ -1,5 +1,4 @@
-devsessions/**
-db/**
-rabbitmq-common/**
 composer*
-/vendor
+vendor/
+rabbit/rabbitmq-webHost
+rmq-websrv.service
