@@ -96,3 +96,10 @@ sudo systemctl start rmq-websrv
 sudo systemctl start rmq-dmz
 sudo systemctl enable rmq-websrv
 sudo systemctl enable rmq-dmz
+
+# Setup Central Logging
+git clone https://github.com/stonX-IT490/logging.git ~/logging
+cd ~/logging
+chmod +x deploy.sh
+./deploy.sh
+cd ~/
