@@ -44,12 +44,33 @@ function insertStocks($request) {
   return [ 'error' => false ];
 }
 
+
+function getWatchedStocks($request) {
+  $db = getDB();
+
+  $r = $db->query(
+    "SELECT Watching.symbol, greater_or_lower, watchValue, email, value, created
+    FROM Watching
+    JOIN Users ON Users.id = Watching.user_id
+    JOIN Stock_Data ON Stock_Data.symbol = Watching.symbol AND Stock_Data.created = (SELECT max(created) FROM Stock_Data WHERE symbol = Watching.symbol)
+    WHERE push = 1"
+  );
+  if (!$r) {
+    return [ 'error' => true, 'msg' => 'There was a problem fetching the results.' ];
+  }
+
+  return $r->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function requestHandler($request) {
   if ($request['type'] == 'getAllStocks') {
     return getAllStocks($request);
   }
   if ($request['type'] == 'insertStocks') {
     return insertStocks($request);
+  }
+  if ($request['type'] == 'getWatchedStocks') {
+    return getWatchedStocks($request);
   }
   return [ 'error' => true, 'msg' => 'Error: RMQ No Type' ];
 }
