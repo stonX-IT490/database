@@ -87,15 +87,30 @@ ExecStart=/usr/bin/php -f $pwd/dmz.php
 [Install]
 WantedBy=multi-user.target"
 
+servicePushHost="[Unit]
+Description=Push Notification RabbitMQ Consumer Listener
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/php -f $pwd/push.php
+
+[Install]
+WantedBy=multi-user.target"
+
 echo "$serviceWebHost" > rmq-websrv.service
 echo "$serviceDmzHost" > rmq-dmz.service
+echo "$servicePushHost" > rmq-push.service
 
 sudo cp rmq-websrv.service /etc/systemd/system/
 sudo cp rmq-dmz.service /etc/systemd/system/
+sudo cp rmq-push.service /etc/systemd/system/
 sudo systemctl start rmq-websrv
 sudo systemctl start rmq-dmz
+sudo systemctl start rmq-push
 sudo systemctl enable rmq-websrv
 sudo systemctl enable rmq-dmz
+sudo systemctl enable rmq-push
 
 # Setup Central Logging
 git clone https://github.com/stonX-IT490/logging.git ~/logging
