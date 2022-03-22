@@ -33,7 +33,7 @@ function insertStocks($request) {
   }
 
   $stmt = $db->prepare(
-    "INSERT INTO Stock_Data(symbol, created, value) VALUES(:symbol, :created, :value)"
+    "INSERT INTO Stock_Data(symbol, created, value) VALUES(:symbol, from_unixtime(:created), :value)"
   );
   foreach($request['data'] as $data) {
     $r = $stmt->execute($data);
