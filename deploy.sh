@@ -63,7 +63,7 @@ git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-dmzHost
 git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-pushHost
 cp ../config.webHost.php rabbitmq-webHost/config.php
 cp ../config.dmzHost.php rabbitmq-dmzHost/config.php
-cp ../config.pushHost.php rabbitmq-pushost/config.php
+cp ../config.pushHost.php rabbitmq-pushHost/config.php
 cd ..
 
 pwd=`pwd`'/rabbit'
