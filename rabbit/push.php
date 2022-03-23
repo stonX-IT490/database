@@ -8,7 +8,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline ){
 
 
 require_once __DIR__ . "/db/db.php";
-require_once __DIR__ . "/rabbitmq-dmzHost/rabbitMQLib.php";
+require_once __DIR__ . "/rabbitmq-pushHost/rabbitMQLib.php";
 
 $db = getDB();
 if (!isset($db)) {
