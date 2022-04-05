@@ -58,9 +58,9 @@ sudo mysql -e "FLUSH PRIVILEGES;"
 
 # Setup rabbitmq listener
 cd rabbit
-git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-webHost
-git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-dmzHost
-git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-pushHost
+git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-webHost
+git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-dmzHost
+git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-pushHost
 cp ../config.webHost.php rabbitmq-webHost/config.php
 cp ../config.dmzHost.php rabbitmq-dmzHost/config.php
 cp ../config.pushHost.php rabbitmq-pushHost/config.php
@@ -115,7 +115,7 @@ sudo systemctl enable rmq-dmz
 sudo systemctl enable rmq-push
 
 # Setup Central Logging
-git clone https://github.com/stonX-IT490/logging.git ~/logging
+git clone git@github.com:stonX-IT490/logging.git ~/logging
 cd ~/logging
 chmod +x deploy.sh
 ./deploy.sh
