@@ -12,12 +12,6 @@ sudo apt autoremove -y --purge
 # Install required packages
 sudo apt install -y ufw mariadb-server expect php-amqp php-bcmath php-cli php-common php-curl php-json php-mbstring php-mysql php-readline php-zip unzip wget inotify-tools
 
-# Install Composer
-sudo wget -O composer-setup.php https://getcomposer.org/installer
-sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-composer require php-amqplib/php-amqplib
-composer update
-
 # Setup firewall
 sudo ufw --force enable
 sudo ufw allow ssh
