@@ -1,6 +1,8 @@
 composer*
 vendor/
 rabbit/rabbitmq-webHost
+rabbit/rabbitmq-dmzHost
+rabbit/rabbitmq-pushHost
 rmq-websrv.service
 rmq-dmz.service
 rmq-push.service

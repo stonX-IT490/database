@@ -12,12 +12,6 @@ sudo apt autoremove -y --purge
 # Install required packages
 sudo apt install -y ufw mariadb-server expect php-amqp php-bcmath php-cli php-common php-curl php-json php-mbstring php-mysql php-readline php-zip unzip wget inotify-tools
 
-# Install Composer
-sudo wget -O composer-setup.php https://getcomposer.org/installer
-sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-composer require php-amqplib/php-amqplib
-composer update
-
 # Setup firewall
 sudo ufw --force enable
 sudo ufw allow ssh
@@ -58,9 +52,9 @@ sudo mysql -e "FLUSH PRIVILEGES;"
 
 # Setup rabbitmq listener
 cd rabbit
-git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-webHost
-git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-dmzHost
-git clone https://github.com/stonX-IT490/rabbitmq-common.git rabbitmq-pushHost
+git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-webHost
+git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-dmzHost
+git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-pushHost
 cp ../config.webHost.php rabbitmq-webHost/config.php
 cp ../config.dmzHost.php rabbitmq-dmzHost/config.php
 cp ../config.pushHost.php rabbitmq-pushHost/config.php
@@ -115,7 +109,7 @@ sudo systemctl enable rmq-dmz
 sudo systemctl enable rmq-push
 
 # Setup Central Logging
-git clone https://github.com/stonX-IT490/logging.git ~/logging
+git clone git@github.com:stonX-IT490/logging.git ~/logging
 cd ~/logging
 chmod +x deploy.sh
 ./deploy.sh
