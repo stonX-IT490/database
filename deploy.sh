@@ -53,8 +53,17 @@ sudo mysql -e "FLUSH PRIVILEGES;"
 # Setup rabbitmq listener
 cd rabbit
 git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-webHost
+cd rabbitmq-webHost
+./deploy.sh
+cd ..
 git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-dmzHost
+cd rabbitmq-dmzHost
+./deploy.sh
+cd ..
 git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-pushHost
+cd rabbitmq-pushHost
+./deploy.sh
+cd ..
 cp ../config.webHost.php rabbitmq-webHost/config.php
 cp ../config.dmzHost.php rabbitmq-dmzHost/config.php
 cp ../config.pushHost.php rabbitmq-pushHost/config.php
