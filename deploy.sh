@@ -198,27 +198,27 @@ if [ $cluster == "prod" ]; then
   fi
 fi
 
+autoRestart="[Unit]
+Description=RMQ autoRestart Service
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=$pwd
+ExecStart=/usr/bin/bash -f $pwd/autoRestart.sh
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target"
+
 # Create autoRestart service in systemd
 if [ $cluster == "prod" ]; then
   chmod +x $pwd/autoRestart.sh
 
-  autoRestart="[Unit]
-  Description=RMQ autoRestart Service
-
-  [Service]
-  Type=simple
-  Restart=always
-  WorkingDirectory=$pwd
-  ExecStart=/usr/bin/bash -f $pwd/autoRestart.sh
-  User=root
-  Group=root
-
-  [Install]
-  WantedBy=multi-user.target"
-
   echo "$autoRestart" > rmq-autoRestart.service
 
-  sudo cp autoRestart.service /etc/systemd/system/
+  sudo cp rmq-autoRestart.service /etc/systemd/system/
   sudo systemctl start rmq-autoRestart
   sudo systemctl enable rmq-autoRestart
 fi
