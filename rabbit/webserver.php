@@ -471,7 +471,7 @@ function getArbitrageOpportunities($request) {
     "SELECT rate
     FROM ExchangeRates
     WHERE (created >= CURRENT_DATE - INTERVAL 1 DAY AND source = :source)
-    ORDER BY dest"
+    ORDER BY destination"
   );
   
   foreach ($currencies as $currency) {
