@@ -62,7 +62,7 @@ function insertForex($request) {
   }
 
   $stmt = $db->prepare(
-    "INSERT INTO ExchangeRates(source, destination, created, value) VALUES(:source, :destination, from_unixtime(:created), :value)"
+    "INSERT INTO ExchangeRates(source, destination, created, rate) VALUES(:source, :destination, from_unixtime(:created), :rate)"
   );
   foreach($request['data'] as $data) {
     $r = $stmt->execute($data);
