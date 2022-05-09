@@ -65,6 +65,7 @@ expect eof"
 # Import DB Schema
 sudo mysql < schema.sql
 sudo mysql < stocks.sql
+sudo mysql < currencies.sql
 
 # Create user
 sudo mysql -e "CREATE USER 'stonx'@'localhost' IDENTIFIED BY 'stonx_passwd';"
