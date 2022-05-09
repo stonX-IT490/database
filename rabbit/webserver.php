@@ -456,6 +456,47 @@ function getAllStocks($request) {
   return $r->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getArbitrageOpportunities($request) {
+	
+  require_once __DIR__ . "/dmz.php";
+  require_once __DIR__ . "/arbitrage.php";
+	
+  $db = getDB();
+	
+  $start = $request['start']; 
+
+  $currencies = getAllCurrencies($request);
+  $rates = array();
+	
+  $stmt = $db->prepare(
+	"SELECT rate
+	FROM ExchangeRates
+	WHERE (created >= CURRENT_DATE - INTERVAL 1 DAY AND source = :source)
+	ORDER BY dest"
+  );
+	
+  foreach ($currencies as $currency)
+  {
+	$r = $stmt->execute($data);
+	if (!$r) {
+	  continue;
+	}
+	
+	$fetchRates = $r->fetchAll(PDO::FETCH_ASSOC);
+	$rawRates = array();
+	
+	foreach($fetchRates as $rate)
+	{
+	  array_push($rawRates, $rate['rate']);
+	}
+					 
+	array_push($rates, $rawRates);
+  }
+	
+	return arbitrage($currencies, $rates, $start);
+	
+}
+
 function getTradeHistory($request) {
   $db = getDB();
   $user = $request['user'];
@@ -857,6 +898,9 @@ function requestHandler($request) {
   }
   if ($request['type'] == 'getAllStocks') {
     return getAllStocks($request);
+  }
+  if ($request['type'] == 'getArbitrageOpportunities') {
+    return getArbitrageOpportunities($request);
   }
   if ($request['type'] == 'getTradeHistory') {
     return getTradeHistory($request);

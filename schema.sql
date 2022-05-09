@@ -113,3 +113,19 @@ CREATE TABLE IF NOT EXISTS `Portfolio` (
   CONSTRAINT `Portfolio_ibfk_3` FOREIGN KEY (`last_trade_id`) REFERENCES `Trade` (`id`),
   CONSTRAINT `Portfolio_ibfk_4` FOREIGN KEY (`initial_trade_id`) REFERENCES `Trade` (`id`)
 );
+
+CREATE TABLE IF NOT EXISTS `Currencies` (
+  `symbol` varchar(6) NOT NULL,
+  PRIMARY KEY (`symbol`)
+);
+
+CREATE TABLE IF NOT EXISTS `ExchangeRates` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `source` varchar(6) NOT NULL,
+  `destination` varchar(6) NOT NULL,
+  `rate` decimal(10,2) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  CONSTRAINT `ExchangeRates_ibfk_1` FOREIGN KEY (`source`) REFERENCES `Currencies` (`symbol`),
+  CONSTRAINT `ExchangeRates_ibfk_2` FOREIGN KEY (`destination`) REFERENCES `Currencies` (`symbol`)
+);
