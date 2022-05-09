@@ -457,44 +457,39 @@ function getAllStocks($request) {
 }
 
 function getArbitrageOpportunities($request) {
-	
-  require_once __DIR__ . "/dmz.php";
   require_once __DIR__ . "/arbitrage.php";
-	
+  
   $db = getDB();
-	
+  
   $start = $request['start']; 
 
-  $currencies = getAllCurrencies($request);
-  $rates = array();
-	
+  $r = $db->query("SELECT symbol FROM Currencies ORDER BY symbol ASC");
+  $currencies =  $r->fetchAll(PDO::FETCH_COLUMN);
+  $rates = [];
+  
   $stmt = $db->prepare(
-	"SELECT rate
-	FROM ExchangeRates
-	WHERE (created >= CURRENT_DATE - INTERVAL 1 DAY AND source = :source)
-	ORDER BY dest"
+    "SELECT rate
+    FROM ExchangeRates
+    WHERE (created >= CURRENT_DATE - INTERVAL 1 DAY AND source = :source)
+    ORDER BY dest"
   );
-	
-  foreach ($currencies as $currency)
-  {
-	$r = $stmt->execute($data);
-	if (!$r) {
-	  continue;
-	}
-	
-	$fetchRates = $r->fetchAll(PDO::FETCH_ASSOC);
-	$rawRates = array();
-	
-	foreach($fetchRates as $rate)
-	{
-	  array_push($rawRates, $rate['rate']);
-	}
-					 
-	array_push($rates, $rawRates);
+  
+  foreach ($currencies as $currency) {
+    $r = $stmt->execute($data);
+    if (!$r) {
+      continue;
+    }
+    
+    $fetchRates = $r->fetchAll(PDO::FETCH_ASSOC);
+    $rawRates = [];
+    
+    foreach($fetchRates as $rate) {
+      array_push($rawRates, $rate['rate']);
+    }
+    array_push($rates, $rawRates);
   }
-	
-	return arbitrage($currencies, $rates, $start);
-	
+  
+  return arbitrage($currencies, $rates, $start);
 }
 
 function getTradeHistory($request) {
