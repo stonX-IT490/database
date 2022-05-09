@@ -5,7 +5,7 @@ read -p "Which cluster? (prod, qa, dev) " cluster
 rabbit_ip="broker"
 check=$( getent hosts | grep -e broker )
 
-if [ -z check ]; then
+if [[ -z check ]]; then
   if [ $cluster == "dev" ]; then
     echo "10.4.90.102 broker" | sudo tee -a /etc/hosts
   fi
