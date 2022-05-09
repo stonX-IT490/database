@@ -128,14 +128,15 @@ echo "$rabbitDmzHost" > rabbitmq-dmzHost/config.php
 echo "$rabbitPushHost" > rabbitmq-pushHost/config.php
 cd ..
 
-pwd=`pwd`'/rabbit'
+pwd=`pwd`
+
 serviceWebHost="[Unit]
 Description=Webserver RabbitMQ Consumer Listener
 
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/bin/php -f $pwd/webserver.php
+ExecStart=/usr/bin/php -f $pwd/rabbit/webserver.php
 
 [Install]
 WantedBy=multi-user.target"
@@ -146,7 +147,7 @@ Description=DMZ RabbitMQ Consumer Listener
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/bin/php -f $pwd/dmz.php
+ExecStart=/usr/bin/php -f $pwd/rabbit/dmz.php
 
 [Install]
 WantedBy=multi-user.target"
@@ -157,7 +158,7 @@ Description=Push Notification RabbitMQ Consumer Listener
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/bin/php -f $pwd/push.php
+ExecStart=/usr/bin/php -f $pwd/rabbit/push.php
 
 [Install]
 WantedBy=multi-user.target"
@@ -175,6 +176,27 @@ sudo systemctl start rmq-push
 sudo systemctl enable rmq-websrv
 sudo systemctl enable rmq-dmz
 sudo systemctl enable rmq-push
+
+serviceCheckProd1="[Unit]
+Description=Check if database-prod1 is up
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=$pwd/check.sh
+
+[Install]
+WantedBy=multi-user.target"
+
+if [ $cluster == "prod" ]; then
+  read -p "Which host? (prod1, prod2) " vm_type
+  if [ $vm_type == "prod2" ]; then
+    echo "$serviceCheckProd1" > check-prod1.service
+    sudo cp check-prod1.service /etc/systemd/system/
+    sudo systemctl start check-prod1
+    sudo systemctl enable check-prod1
+  fi
+fi
 
 # Setup Central Logging
 git clone git@github.com:stonX-IT490/logging.git ~/logging
