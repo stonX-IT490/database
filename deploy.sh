@@ -198,6 +198,31 @@ if [ $cluster == "prod" ]; then
   fi
 fi
 
+
+# systemd
+chmod +x $pwd/autoRestart.sh
+
+# Create autoRestart service in systemd
+autoRestart="[Unit]
+Description=RMQ autoRestart Service
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=$pwd
+ExecStart=/usr/bin/bash -f $pwd/autoRestart.sh
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target"
+
+echo "$autoRestart" > rmq-autoRestart.service
+
+sudo cp autoRestart.service /etc/systemd/system/
+sudo systemctl start rmq-autoRestart
+sudo systemctl enable rmq-autoRestart
+
 # Setup Central Logging
 git clone git@github.com:stonX-IT490/logging.git ~/logging
 cd ~/logging
