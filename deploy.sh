@@ -1,5 +1,25 @@
 #!/bin/bash
 
+read -p "Which cluster? (prod, qa, dev) " cluster
+
+rabbit_ip="broker"
+check=$( getent hosts | grep -e broker )
+
+if [ -z check ]; then
+  if [ $cluster == "dev" ]; then
+    echo "10.4.90.102 broker" | sudo tee -a /etc/hosts
+  fi
+
+  if [ $cluster == "qa" ]; then
+    echo "10.4.90.152 broker" | sudo tee -a /etc/hosts
+  fi
+
+  if [ $cluster == "prod" ]; then
+    echo "10.4.90.52 broker" | sudo tee -a /etc/hosts
+    echo "10.4.90.62 broker" | sudo tee -a /etc/hosts
+  fi
+fi
+
 # Update repos
 sudo apt update
 
@@ -15,6 +35,7 @@ sudo apt install -y ufw mariadb-server expect php-amqp php-bcmath php-cli php-co
 # Setup firewall
 sudo ufw --force enable
 sudo ufw allow ssh
+sudo ufw allow 3306
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 
@@ -64,9 +85,46 @@ git clone git@github.com:stonX-IT490/rabbitmq-common.git rabbitmq-pushHost
 cd rabbitmq-pushHost
 ./deploy.sh
 cd ..
-cp ../config.webHost.php rabbitmq-webHost/config.php
-cp ../config.dmzHost.php rabbitmq-dmzHost/config.php
-cp ../config.pushHost.php rabbitmq-pushHost/config.php
+
+rabbitWebHost="<?php
+
+\$config = [
+  'host' =>'$rabbit_ip',
+  'port' => 5672,
+  'username' => 'db',
+  'password' => 'stonx_mariadb',
+  'vhost' => 'webHost'
+];
+
+?>"
+
+rabbitDmzHost="<?php
+
+\$config = [
+  'host' => '$rabbit_ip',
+  'port' => 5672,
+  'username' => 'db',
+  'password' => 'stonx_mariadb',
+  'vhost' => 'dmzHost'
+];
+
+?>"
+
+rabbitPushHost="<?php
+
+\$config = [
+  'host' => '$rabbit_ip',
+  'port' => 5672,
+  'username' => 'db',
+  'password' => 'stonx_mariadb',
+  'vhost' => 'pushHost'
+];
+
+?>"
+
+echo "$rabbitWebHost" > rabbitmq-webHost/config.php
+echo "$rabbitDmzHost" > rabbitmq-dmzHost/config.php
+echo "$rabbitPushHost" > rabbitmq-pushHost/config.php
 cd ..
 
 pwd=`pwd`'/rabbit'
