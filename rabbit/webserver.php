@@ -458,7 +458,7 @@ function getAllStocks($request) {
 
 function getArbitrageOpportunities($request) {
   require_once __DIR__ . "/arbitrage.php";
-  
+
   $db = getDB();
   
   $start = $request['start']; 
@@ -475,7 +475,7 @@ function getArbitrageOpportunities($request) {
   );
   
   foreach ($currencies as $currency) {
-    $r = $stmt->execute($data);
+    $r = $stmt->execute([':source' => $currency]);
     if (!$r) {
       continue;
     }
@@ -489,7 +489,8 @@ function getArbitrageOpportunities($request) {
     array_push($rates, $rawRates);
   }
   
-  return arbitrage($currencies, $rates, $start);
+  $paths = arbitrage($currencies, $rates, $start);
+  return filterArbitragePaths($paths);
 }
 
 function getTradeHistory($request) {
