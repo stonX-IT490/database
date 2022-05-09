@@ -14,7 +14,9 @@ while true; do
     broker=$secondary
     fi
     echo $broker
-   
+
+    sleep 11s
+    
     if [ "$broker" != "$last_setting" ]; then
     echo "restarting services..."
     systemctl restart rmq-websrv
@@ -22,6 +24,4 @@ while true; do
     systemctl restart rmq-push
     last_setting=$broker
     fi
-
-    sleep 5s
 done
